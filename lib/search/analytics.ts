@@ -12,7 +12,7 @@ const metrics: Metrics = {
   topKeywords: new Map(),
 };
 
-export const recordSearch = (q?: string, latencyMs?: number) => {
+export const recordSearch = (q: string | null, latencyMs?: number) => {
   metrics.totalSearches += 1;
 
   if (typeof latencyMs === 'number' && !Number.isNaN(latencyMs)) {
