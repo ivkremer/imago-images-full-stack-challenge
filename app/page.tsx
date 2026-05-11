@@ -1,9 +1,10 @@
-import { Button } from '@/components/ui/button';
+import { Main } from './_components/Home/Main';
+import { PageLayout } from '@/components/layouts/PageLayout';
 
 export default function HomePage() {
   return (
-    <main>
-      <Button>Search</Button>
-    </main>
+    <PageLayout title="IMAGO Media Search">
+      <Main />
+    </PageLayout>
   );
 }

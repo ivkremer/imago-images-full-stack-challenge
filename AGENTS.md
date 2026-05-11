@@ -14,6 +14,10 @@ Please try to stick with the rules specified in `eslint.config.mjs`. Avoid addin
 
 # Shadcn/UI is used
 
+# TypeScript is used
+
+Please check the `tsconfig.json` file.
+
 # Other
 
 Instead of importing everything from `react` package, import only the parts you need and refer them directly (not as
