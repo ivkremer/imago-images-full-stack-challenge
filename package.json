@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
+    "generate": "tsx scripts/generate-data.ts",
     "lint": "eslint . && tsc --noEmit",
     "lint:fix": "eslint . --fix && tsc --noEmit",
     "lint-staged": "lint-staged",
@@ -42,6 +43,7 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "lint-staged": {
@@ -51,5 +53,9 @@
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --fix"
     ]
+  },
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20.19"
   }
 }

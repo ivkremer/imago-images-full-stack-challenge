@@ -16,8 +16,8 @@ export const tokenize = (str: string) =>
     .split(/[^a-z0-9]+/)
     .filter(Boolean);
 
-// Extract country restriction codes from captions like PUBLICATIONxINxGERxSUIxAUTxONLY
-// We only keep country tokens after 'IN' and before 'ONLY' and restrict to an allowlist [GER, SUI, AUT].
+// Extract country restriction codes from captions like "PUBLICATIONxINxGERxSUIxAUTxONLY"
+// We only keep country tokens after 'IN' and before 'ONLY' and restrict to an allowlist e.g., ['GER', 'SUI', 'AUT'].
 export const extractRestrictions = (suchtext: string) => {
   // Find runs of ALLCAPS tokens separated by 'x'
   const matches = suchtext.match(/[A-Z]+(?:x[A-Z]+){1,}/g) || [];
@@ -78,6 +78,7 @@ export const stripRestrictionCaption = (suchtext: string) => {
   // Remove the matched tail including surrounding whitespace
   const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(`\\s*${escapeRegex(segment)}\\s*$`);
+
   return suchtext.replace(pattern, '').trim();
 };
 

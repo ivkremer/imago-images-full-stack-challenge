@@ -1,16 +1,51 @@
 # IMAGO Full-stack Challenge
 
-This repo implements a lightweight search layer in a Next.js (App Router) app using TypeScript and Tailwind + shadcn/ui.
+This repo implements a lightweight search layer in a Next.js app using TypeScript and Tailwind + Shadcn/UI.
 
 See the original task: https://imago-images.notion.site/Coding-Challenge-2-C4-2ee88a8564ed80f0b3e6c7159cdf6b1b
 
-## How to run
+Hosted [on Vercel](https://imago-images-full-stack-challenge-57qbx7kk1.vercel.app/).
 
-- Install deps: npm i
-- Dev: npm run dev
-- Lint/typecheck: npm run lint
+## Installation & Running
 
-## API: GET /api/search
+### Prerequisites
+
+- `node` v20+
+- `npm` v10+
+
+### Optional: Generate More Mocked Data
+
+- Copy [./env.example](./.env.example) to `./.env`.
+- Run `npm run generate -- [amount]` to generate bigger amount of mocked data (10K by default) e.g.,
+
+```shell
+npm run generate -- 500
+```
+
+### Development Mode
+
+```shell
+npm i
+npm run dev
+open http://localhost:3000
+```
+
+### Production Mode
+
+```shell
+npm i
+npm run build
+npm run start
+```
+
+### Additional Scripts
+
+- `lint:fix`: fixes all possible ESLint errors.
+- `prettier:verbose`: provides the full prettier output.
+
+## Comments
+
+### API: GET /api/search
 
 Query params:
 
@@ -29,7 +64,7 @@ Response:
 
 - Fields and weights indexed:
   - suchtext: weight 3
-  - fotografen: weight 1.5
+  - fotografen: weight 2
   - bildnummer: weight 1
 - Exact token matches are boosted (x2). Prefix matches for tokens >= 3 chars contribute base weight.
 - Normalization: NFKD Unicode fold + diacritics removal, lowercasing, delimiter normalization ("\_-/|" -> space), whitespace collapse.
@@ -40,6 +75,8 @@ Response:
 Where it happens: at index-build time (lazy, first request) in-memory.
 
 Updating the index: expose an append path (not wired to an endpoint in this demo) to preprocess and add new items, update inverted index and facets incrementally.
+
+Preprocessing and index creation happen lazily during application startup/runtime initialization.
 
 ## Performance
 

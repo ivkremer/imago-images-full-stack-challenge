@@ -51,8 +51,19 @@ export const Pagination = ({ page, data, loading, onPageSet }: Props) => {
               pages.push(i);
             }
           } else {
-            const leftSibling = Math.max(current - siblingCount, 1);
-            const rightSibling = Math.min(current + siblingCount, tp);
+            // Clamp siblings to avoid duplicating first/last and extend range at edges
+            // eslint-disable-next-line no-magic-numbers
+            let leftSibling = Math.max(current - siblingCount, 2);
+            let rightSibling = Math.min(current + siblingCount, tp - 1);
+
+            // When at the start/end, show one extra page number for better UX (e.g., 1 2 3 … last)
+            if (current === 1) {
+              rightSibling = Math.min(rightSibling + 1, tp - 1);
+            } else if (current === tp) {
+              // eslint-disable-next-line no-magic-numbers
+              leftSibling = Math.max(leftSibling - 1, 2);
+            }
+
             // eslint-disable-next-line no-magic-numbers
             const showLeftEllipsis = leftSibling > 2;
             const showRightEllipsis = rightSibling < tp - 1;

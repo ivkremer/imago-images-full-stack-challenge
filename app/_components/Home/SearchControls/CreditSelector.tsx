@@ -1,5 +1,11 @@
-import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox';
-import { Separator } from '@/components/ui/separator';
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox';
 
 type Props = {
   value: string;
@@ -8,17 +14,16 @@ type Props = {
 };
 
 export const CreditCombobox = ({ value, options, onChange }: Props) => (
-  <Combobox value={value || null} onValueChange={(v: string | null) => onChange(v ?? '')}>
+  <Combobox value={value || null} autoHighlight items={options} onValueChange={(v: string | null) => onChange(v ?? '')}>
     <ComboboxInput placeholder={value ? value : 'Any publisher'} showTrigger showClear />
     <ComboboxContent>
+      <ComboboxEmpty>Any publisher</ComboboxEmpty>
       <ComboboxList>
-        <ComboboxItem value="">Any publisher</ComboboxItem>
-        <Separator />
-        {options.map((opt) => (
-          <ComboboxItem key={opt} value={opt}>
-            {opt}
+        {(item) => (
+          <ComboboxItem key={item} value={item}>
+            {item}
           </ComboboxItem>
-        ))}
+        )}
       </ComboboxList>
     </ComboboxContent>
   </Combobox>

@@ -32,3 +32,6 @@
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated data
+/data
