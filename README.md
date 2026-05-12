@@ -4,7 +4,7 @@ This repo implements a lightweight search layer in a Next.js app using TypeScrip
 
 See the original task: https://imago-images.notion.site/Coding-Challenge-2-C4-2ee88a8564ed80f0b3e6c7159cdf6b1b
 
-Hosted [on Vercel](https://imago-images-full-stack-challenge-57qbx7kk1.vercel.app/).
+Hosted [on Vercel](https://imago-images-full-stack-challenge.vercel.app/).
 
 ## Installation & Running
 
