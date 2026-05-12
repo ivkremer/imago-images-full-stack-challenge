@@ -6,19 +6,19 @@ import { SearchQuerySchema } from '@/lib/search/types';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
+  const { searchParams } = new URL(req.url);
 
   const raw = {
-    q: url.searchParams.get('q'),
-    credit: url.searchParams.get('credit'),
-    dateFrom: url.searchParams.get('dateFrom'),
-    dateTo: url.searchParams.get('dateTo'),
-    restrictions: url.searchParams.getAll('restrictions').length
-      ? url.searchParams.getAll('restrictions')
-      : url.searchParams.get('restrictions'),
-    sort: url.searchParams.get('sort'),
-    page: url.searchParams.get('page'),
-    pageSize: url.searchParams.get('pageSize'),
+    q: searchParams.get('q'),
+    credit: searchParams.get('credit'),
+    dateFrom: searchParams.get('dateFrom'),
+    dateTo: searchParams.get('dateTo'),
+    restrictions: searchParams.getAll('restrictions').length
+      ? searchParams.getAll('restrictions')
+      : searchParams.get('restrictions'),
+    sort: searchParams.get('sort'),
+    page: searchParams.get('page'),
+    pageSize: searchParams.get('pageSize'),
   };
 
   const parsed = SearchQuerySchema.safeParse(raw);
@@ -41,5 +41,6 @@ export async function GET(req: NextRequest) {
   const facets = getFacets();
 
   const payload = JSON.stringify({ ...result, facets, latencyMs: latency });
+
   return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 }
