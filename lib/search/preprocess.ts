@@ -16,8 +16,8 @@ export const tokenize = (str: string) =>
     .split(/[^a-z0-9]+/)
     .filter(Boolean);
 
-// Extract country restriction codes from captions like PUBLICATIONxINxGERxSUIxAUTxONLY
-// We only keep country tokens after 'IN' and before 'ONLY' and restrict to an allowlist [GER, SUI, AUT].
+// Extract country restriction codes from captions like "PUBLICATIONxINxGERxSUIxAUTxONLY"
+// We only keep country tokens after 'IN' and before 'ONLY' and restrict to an allowlist e.g., ['ger', 'sui', 'aut'].
 export const extractRestrictions = (suchtext: string) => {
   // Find runs of ALLCAPS tokens separated by 'x'
   const matches = suchtext.match(/[A-Z]+(?:x[A-Z]+){1,}/g) || [];
@@ -43,42 +43,56 @@ export const extractRestrictions = (suchtext: string) => {
   return Array.from(out);
 };
 
-// Remove the trailing ALLCAPS x-separated restriction caption from suchtext
-// Example: "... PUBLICATIONxINxGERxSUIxAUTxONLY" -> removed
+// Removes ALLCAPS x-separated restriction captions from suchtext.
 export const stripRestrictionCaption = (suchtext: string) => {
   if (!suchtext) {
     return suchtext;
   }
-  // Grab the last ALLCAPS x-separated run at the end
-  const m = suchtext.match(/\s*([A-Z]+(?:x[A-Z]+){1,})\s*$/);
-  if (!m || !m[1]) {
-    return suchtext.trim();
+
+  // Find all ALLCAPS x-separated runs
+  const pattern = /[A-Z]+(?:x[A-Z]+){1,}/g;
+  let result = suchtext;
+
+  const matches = Array.from(result.matchAll(pattern));
+  if (!matches.length) {
+    return result.trim();
   }
-  const segment = m[1];
-  const tokens = segment.split('x');
-  const inIdx = tokens.indexOf('IN');
-  if (inIdx === -1) {
-    return suchtext.trim();
-  }
-  // Ensure there is at least one country-like token after IN (before ONLY)
-  let hasCountry = false;
-  for (let i = inIdx + 1; i < tokens.length; i++) {
-    const t = tokens[i]!;
-    if (t === 'ONLY') {
-      break;
+
+  // We will replace only the runs that look like restriction captions (contain IN ... ONLY? with country codes)
+  // To avoid index shifting while replacing by substring, replace using regex on the fly with a replacer function.
+  result = result.replace(pattern, (segment) => {
+    const tokens = segment.split('x');
+    const inIdx = tokens.indexOf('IN');
+
+    if (inIdx === -1) {
+      // keep non-restriction ALLCAPS sequences
+      return segment;
     }
-    if (/^[A-Z]{3}$/.test(t)) {
-      hasCountry = true;
-      break;
+
+    // Ensure at least one 3-letter token after IN and before ONLY
+    let hasCountry = false;
+    for (let i = inIdx + 1; i < tokens.length; i++) {
+      const t = tokens[i]!;
+      if (t === 'ONLY') {
+        break;
+      }
+      if (/^[A-Z]{3}$/.test(t)) {
+        hasCountry = true;
+        break;
+      }
     }
-  }
-  if (!hasCountry) {
-    return suchtext.trim();
-  }
-  // Remove the matched tail including surrounding whitespace
-  const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(`\\s*${escapeRegex(segment)}\\s*$`);
-  return suchtext.replace(pattern, '').trim();
+
+    if (!hasCountry) {
+      // keep it
+      return segment;
+    }
+
+    // Valid restriction segment -> remove it entirely
+    return ' ';
+  });
+
+  // Collapse multiple spaces and trim
+  return result.replace(/\s+/g, ' ').trim();
 };
 
 // Parse dates in D.M.YYYY or DD.MM.YYYY to YYYY-MM-DD

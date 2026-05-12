@@ -9,19 +9,20 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
 
   const raw = {
-    q: url.searchParams.get('q') ?? undefined,
-    credit: url.searchParams.get('credit') ?? undefined,
-    dateFrom: url.searchParams.get('dateFrom') ?? undefined,
-    dateTo: url.searchParams.get('dateTo') ?? undefined,
+    q: url.searchParams.get('q'),
+    credit: url.searchParams.get('credit'),
+    dateFrom: url.searchParams.get('dateFrom'),
+    dateTo: url.searchParams.get('dateTo'),
     restrictions: url.searchParams.getAll('restrictions').length
       ? url.searchParams.getAll('restrictions')
-      : (url.searchParams.get('restrictions') ?? undefined),
-    sort: url.searchParams.get('sort') ?? undefined,
-    page: url.searchParams.get('page') ?? undefined,
-    pageSize: url.searchParams.get('pageSize') ?? undefined,
+      : url.searchParams.get('restrictions'),
+    sort: url.searchParams.get('sort'),
+    page: url.searchParams.get('page'),
+    pageSize: url.searchParams.get('pageSize'),
   };
 
   const parsed = SearchQuerySchema.safeParse(raw);
+
   if (!parsed.success) {
     return new Response(JSON.stringify({ error: 'Invalid query', issues: parsed.error.issues }), {
       status: 400,
@@ -34,6 +35,7 @@ export async function GET(req: NextRequest) {
   const t0 = Date.now();
   const result = search(query);
   const latency = Date.now() - t0;
+  // saving to analytics:
   recordSearch(query.q, latency);
 
   const facets = getFacets();

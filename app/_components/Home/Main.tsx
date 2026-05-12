@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { HashIcon } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Badge } from '@/components/ui/badge';
+import { DEFAULT_RESULTS_PER_PAGE } from '@/lib/search/constants';
 import type { SearchApiResponse } from '@/lib/search/types';
 import { Pagination } from './Pagination';
 import { SearchControls } from './SearchControls/SearchControls';
+import { SearchResults } from './SearchResults';
 import type { SortOrder } from './types';
 
 export const Main = () => {
@@ -19,7 +19,7 @@ export const Main = () => {
   const [restrictions, setRestrictions] = useState<string[]>([]);
   const [sort, setSort] = useState<SortOrder>('');
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = DEFAULT_RESULTS_PER_PAGE;
 
   const [data, setData] = useState<SearchApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,7 +62,7 @@ export const Main = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedQuery, credit, dateFrom, dateTo, restrictions, sort, page]);
+  }, [debouncedQuery, credit, dateFrom, dateTo, restrictions, sort, page, pageSize]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -125,45 +125,18 @@ export const Main = () => {
       </section>
 
       <section>
-        {loading && <div className="text-muted-foreground">Loading…</div>}
-        {error && <div className="text-destructive">Error: {error}</div>}
+        {loading && <div className="text-muted-foreground text-center fade-in-delayed">Loading…</div>}
+
+        {error && <div className="text-destructive text-center">Error: {error}</div>}
+
         {!loading && !error && data && data.items.length === 0 && (
           <div className="text-muted-foreground">No results.</div>
         )}
-        {!loading && !error && data && data.items.length > 0 && (
-          <div className="space-y-3">
-            <div className="text-sm text-muted-foreground">
-              {data.total} results · {Math.round(data.latencyMs)} ms
-            </div>
-            <ul className="divide-y divide-border rounded-xl border">
-              {data.items.map(({ id, bildnummer, datum, dateISO, fotografen, suchtext, restrictions }) => (
-                <li key={id} className="p-4 flex flex-col gap-1">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="font-mono text-sm flex items-center gap-1">
-                      <HashIcon className="size-3 shrink-0" /> {bildnummer}
-                    </div>
-                    <div className="text-sm text-muted-foreground">{dateISO || datum || 'Date N/A'}</div>
-                  </div>
-                  <div className="text-sm text-accent">{fotografen}</div>
-                  <div className="leading-relaxed">{highlight(suchtext)}</div>
-                  {restrictions.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      Restricted usage:
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {restrictions.map((r) => (
-                          <Badge key={r}>{r.toUpperCase()}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+
+        {!loading && !error && data && data.items.length > 0 && <SearchResults data={data} highlight={highlight} />}
       </section>
 
-      <section className="flex flex-grow-1 items-end">
+      <section className="flex flex-grow-1 items-end mt-3">
         <Pagination loading={loading} data={data} page={page} onPageSet={setPage} />
       </section>
     </div>

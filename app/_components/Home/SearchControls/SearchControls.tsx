@@ -1,23 +1,13 @@
+import type { Dispatch, SetStateAction } from 'react';
+import { ArrowDownWideNarrowIcon, ArrowUpWideNarrowIcon, Trash2Icon } from 'lucide-react';
 import { Field, FieldContent, FieldLabel } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ArrowDownWideNarrowIcon, ArrowUpWideNarrowIcon, Trash2Icon } from 'lucide-react';
 import { DatePicker } from '@/components/custom/DatePicker/DatePicker';
-import { CreditCombobox } from './CreditSelector';
-import type { Dispatch, SetStateAction } from 'react';
 import type { SearchApiResponse } from '@/lib/search/types';
-import {
-  Combobox,
-  ComboboxChip,
-  ComboboxChips,
-  ComboboxChipsInput,
-  ComboboxContent,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxValue,
-  useComboboxAnchor,
-} from '@/components/ui/combobox';
+import { CreditCombobox } from './CreditSelector';
+import { Restrictions } from './Restrictions';
 import type { SortOrder } from '../types';
 
 type Props = {
@@ -51,7 +41,6 @@ export const SearchControls = ({
   dateTo,
   dateFrom,
 }: Props) => {
-  const anchor = useComboboxAnchor();
   const handleClear = () => {
     setQuery('');
     setCredit('');
@@ -118,34 +107,7 @@ export const SearchControls = ({
             <Label>Restrictions</Label>
           </FieldLabel>
           <FieldContent>
-            <Combobox
-              multiple
-              autoHighlight
-              value={restrictions}
-              onValueChange={(vals) => setRestrictions((vals as string[]) ?? [])}
-            >
-              <ComboboxChips ref={anchor} className="w-full">
-                <ComboboxValue>
-                  {(values) => (
-                    <>
-                      {(values as string[]).map((value) => (
-                        <ComboboxChip key={value}>{value.toUpperCase()}</ComboboxChip>
-                      ))}
-                      <ComboboxChipsInput placeholder="Select countries" />
-                    </>
-                  )}
-                </ComboboxValue>
-              </ComboboxChips>
-              <ComboboxContent anchor={anchor}>
-                <ComboboxList>
-                  {facets?.restrictions?.map((item) => (
-                    <ComboboxItem key={item} value={item}>
-                      {item.toUpperCase()}
-                    </ComboboxItem>
-                  ))}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
+            <Restrictions restrictions={restrictions} onSetRestriction={setRestrictions} facets={facets} />
           </FieldContent>
         </Field>
       </div>

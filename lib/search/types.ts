@@ -25,19 +25,19 @@ export type MediaItem = z.infer<typeof MediaItemSchema>;
 
 export const SearchQuerySchema = z
   .object({
-    q: z.string().trim().min(1).optional(),
-    credit: z.string().trim().min(1).optional(),
+    q: z.string().trim().min(1).nullable(),
+    credit: z.string().trim().min(1).nullable(),
     dateFrom: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/)
-      .optional(),
+      .nullable(),
     dateTo: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/)
-      .optional(),
+      .nullable(),
     restrictions: z
       .union([z.array(z.string().trim().min(1)), z.string().trim().min(1)])
-      .optional()
+      .nullable()
       .transform((v) => {
         if (!v) {
           return undefined;
@@ -50,7 +50,7 @@ export const SearchQuerySchema = z
           .filter(Boolean);
         return parts.length ? parts : undefined;
       }),
-    sort: z.enum(['dateAsc', 'dateDesc']).optional(),
+    sort: z.enum(['dateAsc', 'dateDesc']).nullable(),
     page: z.coerce.number().int().min(1).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(DEFAULT_RESULTS_PER_PAGE),
   })

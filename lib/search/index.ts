@@ -1,5 +1,5 @@
-import type { MediaItem, SearchQuery, SearchResult } from './types';
 import { normalize, tokenize, preprocessItem } from './preprocess';
+import { getData } from './data';
 import {
   CREDIT_TOKEN_WEIGHT,
   DEFAULT_RESULTS_PER_PAGE,
@@ -7,10 +7,10 @@ import {
   MAX_RESULTS_PER_PAGE,
   MINIMUM_PREFIX_MATCH_LENGTH,
   TEXT_TOKEN_WEIGHT,
-} from '@/lib/search/constants';
-import { seedData } from './seedData';
+} from './constants';
+import type { MediaItem, SearchQuery, SearchResult } from './types';
 
-// In-memory dataset and inverted index. Built lazily on first use.
+const seedData = getData();
 
 // itemId -> weight contribution
 type Posting = Map<number, number>;
@@ -128,6 +128,7 @@ const applyFilters = (ids: Set<number>, q: SearchQuery) => {
     }
     res.push(id);
   }
+
   return res;
 };
 
@@ -211,6 +212,7 @@ export const getFacets = () => {
     .map(([_, v]) => v)
     .sort((a, b) => b.count - a.count || a.display.localeCompare(b.display))
     .map((v) => v.display);
+
   return {
     credits: creditList,
     restrictions: Array.from(restrictions.keys()),

@@ -13,7 +13,10 @@ export const PageLayout = async ({ children, title }: Props) => (
         <div className="flex flex-grow-1">{children}</div>
       </main>
       <Separator />
-      <footer className="py-8">Ilya Kremer, 2026</footer>
+      <footer className="py-8 flex gap-4 text-secondary-foreground text-sm">
+        <div className="flex-grow-1">Ilya Kremer, 2026</div>
+        For IMAGO
+      </footer>
     </div>
   </>
 );
