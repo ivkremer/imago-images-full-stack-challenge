@@ -118,6 +118,7 @@ Besides Shadcn/UI and Zod the following dependencies are used:
 
 - `clsx` to run \*.ts scripts
 - `lint-staged`, `eslint` and `husky` — for improving maintainability
+- `date-fns` — for the datepicker
 
 ### What I Would Do Next
 
