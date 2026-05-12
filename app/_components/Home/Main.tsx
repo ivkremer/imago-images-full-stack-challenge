@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
+import { DEFAULT_RESULTS_PER_PAGE } from '@/lib/search/constants';
 import type { SearchApiResponse } from '@/lib/search/types';
 import { Pagination } from './Pagination';
 import { SearchControls } from './SearchControls/SearchControls';
+import { SearchResults } from './SearchResults';
 import type { SortOrder } from './types';
-import { DEFAULT_RESULTS_PER_PAGE } from '@/lib/search/constants';
-import { SearchResults } from '@/app/_components/Home/SearchResults';
 
 export const Main = () => {
   const [query, setQuery] = useState('');

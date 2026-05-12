@@ -1,6 +1,6 @@
 import fs from 'fs';
 import raw from './rawData.json';
-import type { RawMediaItem } from '@/lib/search/types';
+import type { RawMediaItem } from './types';
 
 /**
  * Get the mocked data for the search — either from the committed `./rawData.json`,

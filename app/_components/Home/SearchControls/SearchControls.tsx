@@ -5,10 +5,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/custom/DatePicker/DatePicker';
-import { CreditCombobox } from './CreditSelector';
 import type { SearchApiResponse } from '@/lib/search/types';
+import { CreditCombobox } from './CreditSelector';
+import { Restrictions } from './Restrictions';
 import type { SortOrder } from '../types';
-import { Restrictions } from '@/app/_components/Home/SearchControls/Restrictions';
 
 type Props = {
   query: string;
