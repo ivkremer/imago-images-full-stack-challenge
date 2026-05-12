@@ -3,6 +3,7 @@ import { getData } from './data';
 import {
   CREDIT_TOKEN_WEIGHT,
   DEFAULT_RESULTS_PER_PAGE,
+  EXACT_TOKEN_BOOST,
   ID_TOKEN_WEIGHT,
   MAX_RESULTS_PER_PAGE,
   MINIMUM_PREFIX_MATCH_LENGTH,
@@ -146,8 +147,7 @@ export const search = (query: SearchQuery): SearchResult => {
       if (posting) {
         for (const [id, w] of posting) {
           // exact boost
-          // eslint-disable-next-line no-magic-numbers
-          scores.set(id, (scores.get(id) || 0) + w * 2);
+          scores.set(id, (scores.get(id) || 0) + w * EXACT_TOKEN_BOOST);
         }
       }
       // Prefix matches (for tokens >= 3 chars)

@@ -6,5 +6,6 @@ export const MINIMUM_PREFIX_MATCH_LENGTH = 3;
 export const TEXT_TOKEN_WEIGHT = 3;
 export const CREDIT_TOKEN_WEIGHT = 2;
 export const ID_TOKEN_WEIGHT = 1;
+export const EXACT_TOKEN_BOOST = 2;
 
 export const MAX_TOP_KEYWORDS = 20;
